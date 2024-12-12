@@ -1,54 +1,38 @@
 # Movies-project
-Private data analytics project which uses Python, SQL, and Power BI to create a visualization and to gain insights about the most successfull modern movie blockbusters.
+Private data analytics project which uses Python, SQL, and Power BI to create a Dashboard and to gain insights about the most successfull modern movie blockbusters.
 ## Project Overview
 
-### 1. Get csv-files through Kaggle - Technologies: Python & VSCode
+### 1. Download Dataset csv-files at kaggle.com 
 
-To get the raw data for this project, we are using the Kaggle dataset found [here](https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020). Important: The data includes every race, driver from the beginning of F1 until the end of the 2023 season. All data of the 2023 season is included. We are getting the data through my personal Kaggle account and the Kaggle public API. We are using the Python library Opendatasets by doing so. Check the `get_data_through_kaggle_api.py` file for the code.
+To get the raw data for this project, I am using the Kaggle dataset found [here](https://www.kaggle.com/datasets/ggtejas/tmdb-imdb-merged-movies-dataset?select=TMDB++IMDB+Movies+Dataset.csv). 
+Important: The unprocessed raw Dataset which is 240+ MB has been downloaded on 11-26-2024 for this project. 
 
-### 2. Create "f1 database" in SQLite - Technologies: SQLite & DBeaver
+### 2. Transforming the Data for Analytics and Loading it into the PostgreSQL database - Technologies: Jupyter Notebooks & VSCode
 
-We are creating a SQLite database named "f1" with DBeaver Community edition. To view the ER model of the database please check `ergast_db.png` as well as `f1db_user_guide.txt`.
+I prepared the data for ad-hoc analytics and loaded it into a PostgreSQL database to run SQL queries on the Dataset. I used IPYupiter-Notebooks in VSCode for this task. 
+Please check out the file 'movies.ipynb' in the 'python' folder.
 
-### 3. Create tables in "f1 database" on basis of ER model - Technologies: SQLite & DBeaver
+### 3. Create database 'movies' as well as table 'movie_analytics_final' - Technologies: PostgreSQL & PGAdmin4
 
-According to the ER model, the respective tables are created in the database. Check the `create_tables.sql` file for the code.
+I first created the necessary database 'movies' as well as the tables for this project. The data was loaded from the IPJupiter-Notebook into the PostgreSQL database after the tables were created.
+Please see 'create_table.sql' in the 'sql' folder.
 
-### 4. Import data from CSV files into "f1 database" tables - Technologies: SQLite & DBeaver
+### 4. Doing ad-hoc analytics, adding information to the dataset and creating a view for the visualization in Power BI - Technologies: PostgreSQL & PGAdmin4
 
-The data from the CSV files which are downloaded in step 1 are now being imported via DBeaver into the created tables of the "f1 database". This step is done by using the DBeaver UI.
+New information for analytics is created from the imported dataset by creating new columns and calculating values. Ad-hoc analytics is being performed and a view is being created which is the foundation for the Power BI Dashboard. Please see 'movies_analytics.sql' in the 'sql' folder.
 
-### 5. Transform data and create views for Power BI dashboards to answer the business questions - Technologies: SQLite & DBeaver
+### 5. Create Power BI Dashboard to answer the business questions - Technologies: Power BI - Technologies: Power BI
 
-#### Business Question:
+Import the data trough the created view into Power BI and create a dashboard, whith which every user can answer business questions about the financial success of movies. You can view the final Power BI dashboard named 'movies_analytics_final' in the 'power bi' folder.
 
-Who are the most dominant Formula 1 drivers of in modern Formula 1 (beginning in 1980)?
+The dashboard has complete interactive funcionality. All data can be filtered by clicking and selecting the desired values. Trough selecting the desired values, filteres are applied on the whole dashboard and aggregated values are shown on every card and chart.
 
-A good KPI to measure the performance of a driver is his point average through the years he started in F1. Therefore, calculating the point average for each driver for each year is the first task. However, the F1 point system has changed over the years. Please see: [List of Formula One World Championship points scoring systems](https://en.wikipedia.org/wiki/List_of_Formula_One_World_Championship_points_scoring_systems#Points_scoring_systems)
+Good KPIs to measure the financial success of every product is the revenue which is created from it. The revenue in relation to the spent budget answers if a product (in this case: a movie) is a success or not. Therefore the KPIs on top of the dashboard answer this question at a glance. Mainly the card 'Net Profit in Million $' gives information about how successfull a movie was. 
 
-E.g., position 1 gave the driver 10 points, now it is 25 points. And from 1991 - 2002 only the first six drivers got points. Now the first ten drivers get points. We are therefore facing the challenge of creating a unified scoring system.
+Also the card 'Budget to Revenue Ratio' tells to which factor the budget was transfered to revenue. A value of '2' means for every dollar budget the production company creted two dollars of revenue.
 
-The solution is to create the following system and apply it to every race result in every year:
+The scatter plot on the right side shows the top performing movies which generated 500 million dollar or more revenue and relates them to their user rating. The user rating is measured from 1 (not a good movie) to 10 (one of the best movies ever).
 
-Rank 1 = 10 Points<br>
-Rank 2 = 9 Points<br>
-Rank 3 = 8 Points<br>
-Rank 4 = 7 Points<br>
-Rank 5 = 6 Points<br>
-Rank 6 = 5 Points<br>
-Rank 7 = 4 Points<br>
-Rank 8 = 3 Points<br>
-Rank 9 = 2 Points<br>
-Rank 10 = 1 Point<br>
+The table on the lower half of the board shows all data which aggregates to the results shown in charts and cards on the board. So it is possible to directly see every entry (movie) which correlated to the filtered result.
 
-This allows for the average points per year KPI to be calculated and to determine the most dominant driver of modern Formula 1. Please check the main code file of this project: `sql_queries_driver_visualization.sql`.
-
-### 6. Search web and add new third-party data into the database (championships and driver pictures) - Technologies: Excel
-
-After working with the dataset and having a good understanding of the data it contains, we realize there is no data about the number of won championships. However, we want to include this information in our final "F1 dashboard" as well as some pictures of the most dominant F1 drivers to make the dashboard more appealing. Therefore, we include the information of the number of championships won from the following website: [List of Formula One World Drivers' Champions](https://en.wikipedia.org/wiki/List_of_Formula_One_World_Drivers%27_Champions#By_season)
-
-Repeat steps 3 and 4 to get the data into the "F1 database".
-
-### 7. Create "f1 dashboard" with Power BI - Technologies: Power BI
-
-In the final step, we use Power BI to create the "f1" dashboard in order to answer the business questions and present results. Check the `f1_dashboard.pbix` file for the final result of the project.
+Finally on the right side you have filter options with which you can choose, release year, genre, production company, production country and director of all movies.
